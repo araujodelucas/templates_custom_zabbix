@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>3.0</version>
+    <date>2019-10-02T19:04:04Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Alert Log - Homologacao</template>
+            <name>Template Alert Log - Homologacao</name>
+            <description/>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Alert Log</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>{$INSTANCE} - Alert Log</name>
+                    <type>7</type>
+                    <snmp_community/>
+                    <multiplier>0</multiplier>
+                    <snmp_oid/>
+                    <key>logrt[/u01/app/oracle/diag/rdbms/{$INSTANCE}/{$INSTANCE}/trace/alert_{$INSTANCE}.log,^ORA-(00600|01089|01630|1630|01652|1652|28511|02068)]</key>
+                    <delay>7200</delay>
+                    <history>90</history>
+                    <trends>0</trends>
+                    <status>0</status>
+                    <value_type>2</value_type>
+                    <allowed_hosts/>
+                    <units/>
+                    <delta>0</delta>
+                    <snmpv3_contextname/>
+                    <snmpv3_securityname/>
+                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
+                    <snmpv3_authprotocol>0</snmpv3_authprotocol>
+                    <snmpv3_authpassphrase/>
+                    <snmpv3_privprotocol>0</snmpv3_privprotocol>
+                    <snmpv3_privpassphrase/>
+                    <formula>1</formula>
+                    <delay_flex/>
+                    <params/>
+                    <ipmi_sensor/>
+                    <data_type>0</data_type>
+                    <authtype>0</authtype>
+                    <username/>
+                    <password/>
+                    <publickey/>
+                    <privatekey/>
+                    <port/>
+                    <description/>
+                    <inventory_link>0</inventory_link>
+                    <applications>
+                        <application>
+                            <name>Alert Log</name>
+                        </application>
+                    </applications>
+                    <valuemap/>
+                    <logtimefmt/>
+                </item>
+            </items>
+            <discovery_rules/>
+            <macros/>
+            <templates/>
+            <screens/>
+        </template>
+    </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Alert Log - Homologacao:logrt[/u01/app/oracle/diag/rdbms/{$INSTANCE}/{$INSTANCE}/trace/alert_{$INSTANCE}.log,^ORA-(00600|01089|01630|1630|01652|1652|28511|02068)].nodata(86400)}=0</expression>
+            <name>{HOST.NAME} - Alert Log  {$INSTANCE}  ERROR</name>
+            <url/>
+            <status>1</status>
+            <priority>4</priority>
+            <description/>
+            <type>0</type>
+            <dependencies/>
+        </trigger>
+    </triggers>
+</zabbix_export>
