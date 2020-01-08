@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-01-08T12:12:48Z</date>
+    <groups>
+        <group>
+            <name>Templates/Openshift</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Openshift PODs Monitoring</template>
+            <name>Template Openshift PODs Monitoring</name>
+            <description>Template desenvolvido para monitoramento dos PODs do Openshift</description>
+            <groups>
+                <group>
+                    <name>Templates/Openshift</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>master</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Openshift: container_memory_working_set_bytes</name>
+                    <type>HTTP_AGENT</type>
+                    <key>openshift[container_memory_working_set_bytes]</key>
+                    <delay>3m</delay>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <applications>
+                        <application>
+                            <name>master</name>
+                        </application>
+                    </applications>
+                    <timeout>1m</timeout>
+                    <url>{$URL_POD_MEM_BYTE_USED}</url>
+                    <headers>
+                        <header>
+                            <name>{$HEADERS_NAME}</name>
+                            <value>{$HEADERS_VALUE}</value>
+                        </header>
+                    </headers>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>LLD - container_memory_working_set_bytes</name>
+                    <type>HTTP_AGENT</type>
+                    <key>lld_openshift[container_memory_working_set_bytes]</key>
+                    <delay>6h</delay>
+                    <lifetime>0</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>POD: {#POD_NAME}</name>
+                            <type>DEPENDENT</type>
+                            <key>openshift[{#METRIC_NAME},{#INSTANCE},{#ID}]</key>
+                            <delay>0</delay>
+                            <units>B</units>
+                            <description>Coletando a utilização em bytes de memória dos Pods do Openshift.</description>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>{#METRIC_NAME}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.data.result[?(@.metric.__name__ == &quot;{#METRIC_NAME}&quot; &amp;&amp; @.metric.instance == &quot;{#INSTANCE}&quot; &amp;&amp; @.metric.id == &quot;{#ID}&quot;)].value[1].first()</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>openshift[container_memory_working_set_bytes]</key>
+                            </master_item>
+                        </item_prototype>
+                    </item_prototypes>
+                    <timeout>1m</timeout>
+                    <url>{$URL_POD_MEM_BYTE_USED}</url>
+                    <headers>
+                        <header>
+                            <name>{$HEADERS_NAME}</name>
+                            <value>{$HEADERS_VALUE}</value>
+                        </header>
+                    </headers>
+                    <lld_macro_paths>
+                        <lld_macro_path>
+                            <lld_macro>{#CONTAINER_NAME}</lld_macro>
+                            <path>$.metric.container_name</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#ID}</lld_macro>
+                            <path>$.metric.id</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#IMAGE}</lld_macro>
+                            <path>$.metric.image</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#INSTANCE}</lld_macro>
+                            <path>$.metric.instance</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#METRIC_NAME}</lld_macro>
+                            <path>$.metric.__name__</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#NAMESPACE}</lld_macro>
+                            <path>$.metric.namespace</path>
+                        </lld_macro_path>
+                        <lld_macro_path>
+                            <lld_macro>{#POD_NAME}</lld_macro>
+                            <path>$.metric.pod_name</path>
+                        </lld_macro_path>
+                    </lld_macro_paths>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <params>$.data.result</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$HEADERS_NAME}</macro>
+                    <description>Macro para receber o nome do cabeçalho. Exemplo: Authorization</description>
+                </macro>
+                <macro>
+                    <macro>{$HEADERS_VALUE}</macro>
+                    <description>Macro para receber o valor do cabeçalho. Exemplo: Token</description>
+                </macro>
+                <macro>
+                    <macro>{$URL_POD_MEM_BYTE_USED}</macro>
+                    <description>URL que exibe as métricas do consumo de memória em bytes dos Pods</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
